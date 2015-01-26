@@ -36,7 +36,7 @@ const char *opt_short = "t:h";
 static void usage()
 {
 	printf("Usage:\n"
-	       "ttest <options>\n\t"
+	       "timer-stress <options>\n\t"
 	       "-t <NUM> --threads=<NUM>	Start <NUM> threads in parallel\n\t"
 	       "-h --help			Display this help\n"
 		);
