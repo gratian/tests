@@ -1,0 +1,24 @@
+This folder contains the results for testing the 3.2.43-rt63-feat2[1] Linux
+kernel configured to use the SLAB or SLUB allocator.
+[1] https://git.kernel.org/cgit/linux/kernel/git/rt/linux-stable-rt.git/log/?h=v3.2-rt-features
+
+Commands used:
+# hackbench -l 1000000000
+# cyclictest -H 200 -m -S -i 237 -p 98
+
+Files:
+  * hist-3.2.43-rt63-feat2-SLAB - captured histogram with SLAB configuration
+  * hist-3.2.43-rt63-feat2-SLUB - captured histogram with SLUB configuration
+  * config-SLAB.gz - kernel configuration used for SLAB test
+  * config-SLUB.gz - kernel configuration used for SLUB test
+  * slab_v_slub.png - plotted histogram data (see below for plot legend)
+  * slab_v_slub_peak.png - plotted histogram data highlighting the peak(s)
+  * slab_v_slub_tail.png - zoomed in capture of the histogram tail
+
+Plot(s) legend:
+
+  * CPU0, SLAB - red outline bars;
+  * CPU1, SLAB - yellow bars;
+
+  * CPU0, SLUB - blue bars;
+  * CPU1, SLUB - green bars;
