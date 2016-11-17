@@ -1,0 +1,9 @@
+(safemode) root@antacid:~# ./run 
+Tue Nov 15 04:15:31 UTC 2016
+Linux antacid 4.8.6-rt5-ni #1 SMP PREEMPT RT Mon Nov 14 15:24:35 CST 2016 armv7l GNU/Linux
+# /dev/cpu_dma_latency set to 0us
+policy: fifo: loadavg: 277.66 277.08 277.82 100/504 3151          
+
+T: 0 ( 2752) P:98 I:237 C:243037954 Min:     12 Act:   24 Avg:   24 Max:     120
+T: 1 ( 2787) P:98 I:237 C:243037615 Min:     12 Act:   33 Avg:   24 Max:     108
+

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+date
+uname -a
+
+set -e
+
+iperf_host=kerf
+iperf_port=5001
+hist_out=hackb_iperf_load.hist
+
+hackbench -l 1000000000 &>/dev/null &
+iperf -i 5 --parallel=4 --time=500000 -p "$iperf_port" -c "$iperf_host" &>/dev/null &
+exec cyclictest -H 200 -m -S -i 237 -p 98 -D 16h --histfile="$hist_out"
+
