@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+date
+uname -a
+set -e
+
+hist_out=deferred_timer_load.hist
+
+ttest -t 40 &>/dev/null &
+exec cyclictest -H 200 -m -S -i 237 -p 98 -D 16h --histfile="$hist_out"
+

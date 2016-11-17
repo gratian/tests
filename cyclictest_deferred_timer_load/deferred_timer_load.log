@@ -1,0 +1,9 @@
+(safemode) root@brass:~# ./timer_deferred_load.run 
+Tue Nov 15 22:39:06 UTC 2016
+Linux brass 4.8.6-rt5-ni-00001-g3a12e7c-dirty #1 SMP PREEMPT RT Tue Nov 15 15:10:10 CST 2016 armv7l GNU/Linux
+# /dev/cpu_dma_latency set to 0us
+policy: fifo: loadavg: 7.95 8.23 8.24 8/141 2499            
+
+T: 0 ( 2288) P:98 I:237 C:243037631 Min:     11 Act:   17 Avg:   21 Max:     101
+T: 1 ( 2290) P:98 I:237 C:243037473 Min:     12 Act:   19 Avg:   21 Max:      79
+

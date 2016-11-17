@@ -1,0 +1,83 @@
+From 6e6e7c852fc8efc95dbfa6becc14b3a7846fd6f8 Mon Sep 17 00:00:00 2001
+From: Gratian Crisan <gratian.crisan@ni.com>
+Date: Wed, 9 Nov 2016 15:43:03 -0600
+Subject: [PATCH] sysfs, hrtimer: Add sysfs knob to defer non-rt timers to
+ softirq context
+
+Current hrtimer implementation processes all expired timers marked as
+irqsafe in the timer irq context. This includes timers created by non-rt
+tasks and as a result it can create unbounded latencies for real-time tasks
+waiting on an hrtimer to expire.
+
+Provide /sys/kernel/hrtimer_defer_nonrt configuration knob which when set
+results in only marking as irqsafe timers created by a rt task. The rest
+will get deferred to the HRTIMER_SOFTIRQ for handling via the existing
+mechanism in __hrtimer_run_queues/hrtimer_rt_defer.
+
+Signed-off-by: Gratian Crisan <gratian.crisan@ni.com>
+---
+ kernel/ksysfs.c       | 18 ++++++++++++++++++
+ kernel/time/hrtimer.c |  4 +++-
+ 2 files changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
+index ddef079..9fd4f50 100644
+--- a/kernel/ksysfs.c
++++ b/kernel/ksysfs.c
+@@ -189,6 +189,23 @@ static ssize_t rcu_normal_store(struct kobject *kobj,
+ KERNEL_ATTR_RW(rcu_normal);
+ #endif /* #ifndef CONFIG_TINY_RCU */
+ 
++extern int hrtimer_defer_nonrt;
++static ssize_t hrtimer_defer_nonrt_show(struct kobject *kobj,
++					struct kobj_attribute *attr, char *buf)
++{
++	return sprintf(buf, "%d\n", hrtimer_defer_nonrt);
++}
++static ssize_t hrtimer_defer_nonrt_store(struct kobject *kobj,
++					struct kobj_attribute *attr,
++					const char *buf, size_t count)
++{
++	if (kstrtoint(buf, 0, &hrtimer_defer_nonrt))
++		return -EINVAL;
++
++	return count;
++}
++KERNEL_ATTR_RW(hrtimer_defer_nonrt);
++
+ /*
+  * Make /sys/kernel/notes give the raw contents of our kernel .notes section.
+  */
+@@ -237,6 +254,7 @@ static struct attribute * kernel_attrs[] = {
+ #ifdef CONFIG_PREEMPT_RT_FULL
+ 	&realtime_attr.attr,
+ #endif
++	&hrtimer_defer_nonrt_attr.attr,
+ 	NULL
+ };
+ 
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index d85f638..df5783a 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -106,6 +106,8 @@ static inline int hrtimer_clockid_to_base(clockid_t clock_id)
+ 	return hrtimer_clock_to_base_table[clock_id];
+ }
+ 
++int hrtimer_defer_nonrt;
++
+ /*
+  * Functions and macros which are different for UP/SMP systems are kept in a
+  * single place
+@@ -1644,7 +1646,7 @@ static enum hrtimer_restart hrtimer_wakeup(struct hrtimer *timer)
+ void hrtimer_init_sleeper(struct hrtimer_sleeper *sl, struct task_struct *task)
+ {
+ 	sl->timer.function = hrtimer_wakeup;
+-	sl->timer.irqsafe = 1;
++	sl->timer.irqsafe = (hrtimer_defer_nonrt) ? rt_task(task) : 1;
+ 	sl->task = task;
+ }
+ EXPORT_SYMBOL_GPL(hrtimer_init_sleeper);
+-- 
+2.10.2
+
