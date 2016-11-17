@@ -1,0 +1,13 @@
+root@antacid:~# ttest -t 7 &>/dev/null &
+[1] 2663
+root@antacid:~# cyclictest -m -S -i 537 -p 98 -E -b 220
+# /dev/cpu_dma_latency set to 0us
+INFO: debugfs mountpoint: /sys/kernel/debug/tracing/
+policy: fifo: loadavg: 0.85 1.02 1.16 4/108 2673           
+
+T: 0 ( 2672) P:98 I:537 C: 223313 Min:     32 Act:   51 Avg:   52 Max:     210
+T: 1 ( 2673) P:98 I:1037 C: 115616 Min:     35 Act:   43 Avg:   54 Max:     206
+# Thread Ids: 02672 02673
+# Break thread: 2672
+# Break value: 224
+
