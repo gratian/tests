@@ -1,0 +1,9 @@
+(safemode) root@brass:~# ./run 
+Mon Nov 14 23:43:23 UTC 2016
+Linux brass 4.8.6-rt5-ni #1 SMP PREEMPT RT Mon Nov 14 15:24:35 CST 2016 armv7l GNU/Linux
+# /dev/cpu_dma_latency set to 0us
+policy: fifo: loadavg: 7.27 6.49 5.90 10/142 2703          
+
+T: 0 ( 2446) P:98 I:237 C:243036971 Min:     11 Act:   21 Avg:   26 Max:     164
+T: 1 ( 2448) P:98 I:237 C:243036766 Min:     11 Act:   38 Avg:   29 Max:     154
+
