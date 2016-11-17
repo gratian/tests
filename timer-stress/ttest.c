@@ -15,7 +15,7 @@
 #include <errno.h>
 #include <sys/mman.h>
 
-#define CLOCK CLOCK_REALTIME
+#define CLOCK CLOCK_MONOTONIC
 
 static int g_nthreads = 1;
 static int g_stop = 0;
@@ -36,7 +36,7 @@ const char *opt_short = "t:h";
 static void usage()
 {
 	printf("Usage:\n"
-	       "timer-stress <options>\n\t"
+	       "ttest <options>\n\t"
 	       "-t <NUM> --threads=<NUM>	Start <NUM> threads in parallel\n\t"
 	       "-h --help			Display this help\n"
 		);
@@ -59,7 +59,6 @@ static int parse_options(int argc, char *argv[])
 			case '?':
 			case 'h':
 			case OPT_HELP:
-				usage();
 				return EXIT_FAILURE;
 		}
 	}
@@ -96,8 +95,10 @@ int main(int argc, char *argv[])
 
 	mlockall(MCL_CURRENT | MCL_FUTURE);
 
-	if (parse_options(argc, argv) == EXIT_FAILURE)
+	if (argc < 2 || parse_options(argc, argv) == EXIT_FAILURE) {
+		usage();
 		return EXIT_FAILURE;
+	}
 
 	threads = (pthread_t*)malloc(sizeof(pthread_t) * g_nthreads);
 	if (threads == NULL) {
