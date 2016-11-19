@@ -18,7 +18,7 @@
 #define CLOCK CLOCK_MONOTONIC
 
 static int g_nthreads = 1;
-static int g_stop = 0;
+sig_atomic_t g_stop = 0;
 
 enum {
 	OPT_HELP = 1,
